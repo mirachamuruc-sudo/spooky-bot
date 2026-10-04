@@ -1,0 +1,32 @@
+# ==============================================================================
+# 🎃 Fly.io Konfiguration für den 24/7 Halloween Discord-Bot
+# ==============================================================================
+# HINWEIS: Ein Discord-Bot benötigt KEINE eingehenden HTTP-Ports!
+# auto_stop_machines = false sorgt für ununterbrochenen 24/7-Betrieb!
+# ==============================================================================
+
+app = "halloween-discord-bot"
+primary_region = "fra" # Frankfurt (oder lhr, ams, etc.)
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PYTHONUNBUFFERED = "1"
+
+# ------------------------------------------------------------------------------
+# 24/7 Background Worker Konfiguration (Kein automatisches Abschalten)
+# ------------------------------------------------------------------------------
+[processes]
+  app = "python bot.py"
+
+# Persistentes Speicher-Volume für die SQLite-Datenbank (aiosqlite)
+# Erstellen mit: fly volumes create halloween_data --size 1
+[mounts]
+  source = "halloween_data"
+  destination = "/data"
+
+[vm]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 256
