@@ -1,32 +1,33 @@
-# ==============================================================================
-# 🎃 Fly.io Konfiguration für den 24/7 Halloween Discord-Bot
-# ==============================================================================
-# HINWEIS: Ein Discord-Bot benötigt KEINE eingehenden HTTP-Ports!
-# auto_stop_machines = false sorgt für ununterbrochenen 24/7-Betrieb!
-# ==============================================================================
+# fly.toml app configuration file generated for spooky-bot-pftnxq on 2026-10-04T16:43:19Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
-app = "halloween-discord-bot"
-primary_region = "fra" # Frankfurt (oder lhr, ams, etc.)
+app = 'spooky-bot-pftnxq'
+primary_region = 'ams'
 
 [build]
-  dockerfile = "Dockerfile"
+  dockerfile = 'Dockerfile'
 
 [env]
-  PYTHONUNBUFFERED = "1"
+  PYTHONUNBUFFERED = '1'
 
-# ------------------------------------------------------------------------------
-# 24/7 Background Worker Konfiguration (Kein automatisches Abschalten)
-# ------------------------------------------------------------------------------
 [processes]
-  app = "python bot.py"
+  app = 'python bot.py'
 
-# Persistentes Speicher-Volume für die SQLite-Datenbank (aiosqlite)
-# Erstellen mit: fly volumes create halloween_data --size 1
-[mounts]
-  source = "halloween_data"
-  destination = "/data"
+[[mounts]]
+  source = 'halloween_data'
+  destination = '/data'
 
-[vm]
-  cpu_kind = "shared"
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  cpu_kind = 'shared'
   cpus = 1
   memory_mb = 256
